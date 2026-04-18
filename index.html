@@ -70,13 +70,8 @@ nav a.cta{color:var(--accent)}
   object-fit:cover;
   object-position:center 18%;
   display:block;
-  /* PAGE LOAD: Mac "screen turning on" — starts black, brightens */
-  animation:macReveal 2s cubic-bezier(.25,.1,.25,1) forwards;
-}
-@keyframes macReveal{
-  0%  { filter:brightness(0) contrast(1.1); transform:scale(1.06) }
-  60% { filter:brightness(0.5) }
-  100%{ filter:brightness(1);  transform:scale(1) }
+  will-change:filter,transform;
+  /* JS drives the page-load reveal — no CSS animation */
 }
 
 /* Layered overlays — dim, don't kill the photo */
@@ -112,12 +107,7 @@ nav a.cta{color:var(--accent)}
   text-align:center;
   padding:80px 22px 60px;
   will-change:opacity,transform;
-  /* text fades in after photo reveal */
-  animation:textRise 0.9s cubic-bezier(.2,.8,.2,1) 1.4s both;
-}
-@keyframes textRise{
-  from{opacity:0;transform:translateY(22px)}
-  to{opacity:1;transform:none}
+  opacity:0;transform:translateY(22px); /* JS animates this in */
 }
 .hero-eyebrow{
   display:inline-flex;align-items:center;gap:8px;
@@ -160,7 +150,7 @@ nav a.cta{color:var(--accent)}
   display:flex;flex-direction:column;align-items:center;gap:10px;
   font-size:10px;letter-spacing:.14em;text-transform:uppercase;
   color:rgba(245,245,247,0.45);
-  animation:textRise 1s cubic-bezier(.2,.8,.2,1) 2.2s both;
+  opacity:0; /* JS animates this in */
   will-change:opacity;
 }
 .scroll-hint .line{
@@ -658,51 +648,114 @@ footer a:hover{color:var(--ink);text-decoration:underline}
 
 <script>
 /* ====================================================
-   HERO SCROLL ENGINE
-   — photo zooms in + darkens
-   — text fades out + lifts
-   — scroll hint disappears
+   UNIFIED HERO ANIMATION SYSTEM
+   Phase 1 — Page load (JS timeline, no CSS animations):
+     0ms      photo at brightness(0) scale(1.07)
+     0→2200ms photo brightens + scales to 1
+     1500ms   text starts fading in
+     2300ms   scroll hint appears
+   Phase 2 — Scroll (takes over after intro):
+     photo div zooms in, overlay darkens, text fades out
 ==================================================== */
 (function(){
-  const wrapper  = document.getElementById('heroWrapper');
-  const photo    = document.getElementById('heroPhoto');
-  const overlay  = document.getElementById('heroOverlay');
-  const content  = document.getElementById('heroContent');
-  const hint     = document.getElementById('scrollHint');
+  const wrapper = document.getElementById('heroWrapper');
+  const photoDiv= document.getElementById('heroPhoto');   // wrapper div — scroll scale goes here
+  const img     = document.getElementById('heroImg');     // actual img — intro brightness/scale goes here
+  const overlay = document.getElementById('heroOverlay');
+  const content = document.getElementById('heroContent');
+  const hint    = document.getElementById('scrollHint');
 
+  /* ---- easing functions ---- */
+  function eioq(t){ return t<.5 ? 2*t*t : -1+(4-2*t)*t }   // ease-in-out quad
+  function eout3(t){ return 1-(--t)*t*t }                    // ease-out cubic
+
+  /* ---- set hard initial state before first paint ---- */
+  img.style.filter    = 'brightness(0)';
+  img.style.transform = 'scale(1.07)';
+  content.style.opacity   = '0';
+  content.style.transform = 'translateY(22px)';
+  hint.style.opacity  = '0';
+
+  /* ================================================
+     PHASE 1 — intro timeline
+  ================================================ */
+  const T0         = performance.now();
+  const PHOTO_DUR  = 2200;   // ms — photo screen-on effect
+  const TEXT_START = 1500;   // ms — when name starts rising
+  const TEXT_DUR   =  850;   // ms — name fade-in duration
+  const HINT_START = 2400;   // ms — scroll hint appears
+
+  let introFinished = false;
+
+  function introFrame(now){
+    const e = now - T0;
+
+    /* Photo reveal — brightness 0→1, scale 1.07→1.0 */
+    const pp = Math.min(1, e / PHOTO_DUR);
+    const pe = eioq(pp);
+    img.style.filter    = `brightness(${pe.toFixed(3)})`;
+    img.style.transform = `scale(${(1.07 - pe * 0.07).toFixed(4)})`;
+
+    /* Name + tagline rise in */
+    if(e >= TEXT_START){
+      const tp = Math.min(1, (e - TEXT_START) / TEXT_DUR);
+      const te = eout3(tp);
+      content.style.opacity   = te.toFixed(3);
+      content.style.transform = `translateY(${((1-te)*22).toFixed(1)}px)`;
+    }
+
+    /* Scroll hint */
+    if(e >= HINT_START){
+      const hp = Math.min(1, (e - HINT_START) / 500);
+      hint.style.opacity = (eioq(hp) * 0.55).toFixed(3);
+    }
+
+    if(e < HINT_START + 600){
+      requestAnimationFrame(introFrame);
+    } else {
+      /* Lock final intro values then hand off to scroll */
+      img.style.filter    = 'brightness(1)';
+      img.style.transform = 'scale(1)';
+      content.style.opacity   = '1';
+      content.style.transform = 'translateY(0px)';
+      hint.style.opacity  = '0.55';
+      introFinished = true;
+    }
+  }
+
+  requestAnimationFrame(introFrame);
+
+  /* ================================================
+     PHASE 2 — scroll engine
+     Only writes to content/hint after intro done,
+     but photo-div and overlay update immediately on scroll.
+  ================================================ */
   let ticking = false;
 
-  function update(){
-    const scrollY    = window.scrollY;
+  function scrollUpdate(){
+    const sy         = window.scrollY;
     const stickyZone = wrapper.offsetHeight - window.innerHeight;
-    // p = 0 at top of page, 1 when hero is about to leave sticky
-    const p = Math.min(1, Math.max(0, scrollY / stickyZone));
+    const p          = Math.min(1, Math.max(0, sy / stickyZone));
 
-    /* Photo: slight zoom-in as you scroll (cinematic pull) */
-    const scale = 1 + p * 0.09;
-    photo.style.transform = `scale(${scale})`;
+    /* Photo wrapper zooms in as user scrolls (separate element from intro img) */
+    photoDiv.style.transform = `scale(${1 + p * 0.09})`;
 
-    /* Overlay darkens from 0.28 → 0.82 */
-    const alpha = 0.28 + p * 0.54;
-    overlay.style.background = `rgba(0,0,0,${alpha})`;
+    /* Overlay darkens 0.28 → 0.82 */
+    overlay.style.background = `rgba(0,0,0,${(0.28 + p * 0.54).toFixed(3)})`;
 
-    /* Text: fades out in first 50% of scroll, lifts upward */
-    const tOpacity = Math.max(0, 1 - p * 2.2);
-    const tY       = p * -50;
-    content.style.opacity   = tOpacity;
-    content.style.transform = `translateY(${tY}px)`;
-
-    /* Scroll hint vanishes quickly */
-    hint.style.opacity = Math.max(0, 1 - p * 5);
+    /* Text + hint — only take over once intro has finished */
+    if(introFinished){
+      content.style.opacity   = Math.max(0, 1 - p * 2.2).toFixed(3);
+      content.style.transform = `translateY(${(p * -50).toFixed(1)}px)`;
+      hint.style.opacity      = Math.max(0, 0.55 - p * 5).toFixed(3);
+    }
 
     ticking = false;
   }
 
   window.addEventListener('scroll', ()=>{
-    if(!ticking){ requestAnimationFrame(update); ticking = true; }
+    if(!ticking){ requestAnimationFrame(scrollUpdate); ticking = true; }
   }, {passive:true});
-
-  update(); // initial state
 })();
 
 /* ====================================================
