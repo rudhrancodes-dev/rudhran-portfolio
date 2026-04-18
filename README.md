@@ -90,4 +90,28 @@ This portfolio is open source and available for personal and educational use.
 
 ---
 
+---
+
+## 📢 Share This
+
+> **Check out my portfolio!** 🚀
+> 
+> I just built and deployed a modern portfolio website with an Apple-inspired design system.
+>
+> **Live:** https://rudhran.netlify.app
+> **Code:** https://github.com/rudhrancodes-dev/rudhran-portfolio
+>
+> **Features:**
+> - ✨ Sleek dark theme with glassmorphism effects
+> - 🎨 Beautiful animations and smooth interactions
+> - 🚀 Fully responsive & optimized for performance
+> - 🎬 Interactive 3D graphics with Three.js
+> - ⚡ Production-ready code built with best practices
+>
+> Built with **HTML5, CSS3, and JavaScript** — designed with Claude AI for optimal UX and performance.
+>
+> Feel free to fork and customize it for your own portfolio! 💻
+
+---
+
 Made with ❤️ and AI assistance
