@@ -68,10 +68,11 @@ nav a.cta{color:var(--accent)}
 .hero-photo img{
   width:100%;height:100%;
   object-fit:cover;
-  object-position:center 18%;
+  object-position:center 35%;   /* pull back — show more of the face, not just forehead */
   display:block;
   will-change:filter,transform;
-  /* JS drives the page-load reveal — no CSS animation */
+  /* subtle cinematic grade — more contrast, slight warmth, punchy */
+  filter:brightness(0) contrast(1.1) saturate(0.85);
 }
 
 /* Layered overlays — dim, don't kill the photo */
@@ -693,7 +694,7 @@ footer a:hover{color:var(--ink);text-decoration:underline}
     /* Photo reveal — brightness 0→1, scale 1.07→1.0 */
     const pp = Math.min(1, e / PHOTO_DUR);
     const pe = eioq(pp);
-    img.style.filter    = `brightness(${pe.toFixed(3)})`;
+    img.style.filter    = `brightness(${pe.toFixed(3)}) contrast(1.1) saturate(0.85)`;
     img.style.transform = `scale(${(1.07 - pe * 0.07).toFixed(4)})`;
 
     /* Name + tagline rise in */
@@ -714,7 +715,7 @@ footer a:hover{color:var(--ink);text-decoration:underline}
       requestAnimationFrame(introFrame);
     } else {
       /* Lock final intro values then hand off to scroll */
-      img.style.filter    = 'brightness(1)';
+      img.style.filter    = 'brightness(1) contrast(1.1) saturate(0.85)';
       img.style.transform = 'scale(1)';
       content.style.opacity   = '1';
       content.style.transform = 'translateY(0px)';
