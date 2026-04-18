@@ -21,8 +21,7 @@ A beautiful, modern portfolio website built with **HTML, CSS, and Three.js**, fe
 
 ## 🚀 Live Demo
 
-- **rudhran.netlify.app** — [View Live](https://rudhran.netlify.app)
-- **rudhran-b.netlify.app** — [View Live](https://rudhran-b.netlify.app)
+**[View Portfolio →](https://rudhran.netlify.app)**
 
 ## 📦 What's Included
 
