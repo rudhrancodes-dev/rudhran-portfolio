@@ -1,117 +1,62 @@
 # Rudhran B — Portfolio
 
-A beautiful, modern portfolio website built with **HTML, CSS, and Three.js**, featuring an Apple-inspired design system and smooth animations.
+> **Live:** [rudhran.netlify.app](https://rudhran.netlify.app)  ·  **Mirror:** [rudhran-nine.vercel.app](https://rudhran-nine.vercel.app)
 
-## ✨ Features
+![Portfolio hero](assets/preview.png)
 
-- **Clean, Modern Design** — Apple-inspired aesthetic with glassmorphism and smooth interactions
-- **3D Graphics** — Interactive Three.js animations for visual appeal
-- **Responsive Layout** — Fully responsive design that works on all devices
-- **Performance Optimized** — Lightweight and fast-loading
-- **Beautiful Typography** — Inter font family with thoughtful hierarchy
-- **Smooth Animations** — CSS transitions and scroll-based animations
+A single-file, Apple-flavored portfolio for **Rudhran B** — CS student from Coimbatore, obsessed with how systems break and how good design makes them unbreakable.
 
-## 🎨 Design Highlights
+Built as one self-contained `index.html` — every effect is Canvas / WebGL / CSS, no build step, no framework.
 
-- Dark theme with carefully chosen color palette
-- Backdrop blur effects for modern look
-- Custom CSS variables for easy theming
-- Accessibility-first approach
-- JetBrains Mono for code snippets
+---
 
-## 🚀 Live Demo
+## What's inside
 
-**[View Portfolio →](https://rudhran.netlify.app)**
+- **Hero** — pixel-disintegration assembly on every section heading, italic Instrument Serif emphasis, hero parallax that tilts to the cursor
+- **Aegis** — WebGL2 fragment shader doing flow-noise + mouse-driven ripple refraction, live threat feed with sparkline ticker
+- **macOS Terminal window** — traffic lights, gradient title bar, working zsh-style shell underneath (`help`, `about`, `ls`, `projects`, `project aegis`, `aegis run`, `matrix`, `neofetch`, `theme`, `goto`, `email`, tab-complete, history)
+- **Refined cursor system** — backdrop-blur glass lens with chromatic-aberration ring, precision dot using `mix-blend-mode: difference`, soft trail ribbon, 520px spotlight glow, magnetic snap to interactive elements, Apple-palette lightning crackle that arcs to buttons and shockwaves on click
+- **Projects** — 3D flip cards with page-curl highlight; live data from the GitHub profile
+- **Stats / CRT panel** — phosphor stats with scanlines, count-up on scroll
+- **Contact** — frosted-glass panel, pixel-sort headline, copy-to-clipboard with cyan burst
+- **Smart nav** — auto-hides on scroll down, returns on scroll up
 
-## 📦 What's Included
+## Stack
 
-```
-├── index.html          # Main portfolio page
-├── assets/            # Images and project assets
-├── uploads/           # Additional resources
-└── README.md          # This file
-```
+- HTML5 · CSS3 (custom properties, backdrop-filter, `mix-blend-mode`)
+- Canvas 2D + WebGL2 (raw shaders, no Three.js bloat — Three only inside specific project cards)
+- Vanilla JS — no framework, no bundler
+- Fonts: Inter, JetBrains Mono, Instrument Serif (Google Fonts)
 
-## 🛠️ Tech Stack
+## Run locally
 
-- **HTML5** — Semantic markup
-- **CSS3** — Modern styling with custom properties
-- **JavaScript** — Interactive features
-- **Three.js** — 3D graphics library
-- **Fonts** — Google Fonts (Inter + JetBrains Mono)
-
-## 💻 Built With
-
-This portfolio leverages **Claude AI** for design assistance and optimization, ensuring:
-- Clean, semantic code structure
-- Accessibility best practices
-- Performance optimization
-- Mobile-first responsive design
-
-## 🎯 How to Use
-
-1. Clone or download this repository
-2. Open `index.html` in your browser
-3. Customize with your own content and projects
-4. Deploy to your preferred hosting (Netlify, Vercel, GitHub Pages, etc.)
-
-## 📝 Customization
-
-To customize this portfolio:
-
-1. **Edit Content** — Update the HTML in `index.html` with your information
-2. **Change Colors** — Modify CSS variables in the `:root` selector
-3. **Update Projects** — Add your own project sections
-4. **Add Images** — Place your images in the `assets/` folder
-
-## 🚀 Deployment
-
-### Deploy to Netlify (Recommended)
 ```bash
-npm install -g netlify-cli
-netlify deploy
+git clone https://github.com/rudhrancodes-dev/rudhran-portfolio.git
+cd rudhran-portfolio
+# any static server works, e.g.
+python3 -m http.server 8080
 ```
 
-### Deploy to GitHub Pages
-Push to GitHub and enable Pages in repository settings.
+Then open `http://localhost:8080`.
 
-### Deploy to Vercel
-Connect your repository and Vercel will auto-deploy.
+## Deploy
 
-## 📄 License
+Drag `index.html` onto [app.netlify.com/drop](https://app.netlify.com/drop), or push to a Vercel-connected repo and it deploys on commit.
 
-This portfolio is open source and available for personal and educational use.
+## Author
 
-## 👨‍💻 Author
-
-**Rudhran B**
-- Portfolio: [rudhran.netlify.app](https://rudhran.netlify.app)
+**Rudhran B.** — Coimbatore, India  
+- GitHub: [@rudhrancodes-dev](https://github.com/rudhrancodes-dev)
 - Email: rudhran.codes@gmail.com
 
 ---
 
----
+## Share with a friend
 
-## 📢 Share This
-
-> **Check out my portfolio!** 🚀
-> 
-> I just built and deployed a modern portfolio website with an Apple-inspired design system.
+> Built my new portfolio — single-file HTML, all effects in pure Canvas / WebGL / CSS, no framework.
 >
 > **Live:** https://rudhran.netlify.app
-> **Code:** https://github.com/rudhrancodes-dev/rudhran-portfolio
 >
-> **Features:**
-> - ✨ Sleek dark theme with glassmorphism effects
-> - 🎨 Beautiful animations and smooth interactions
-> - 🚀 Fully responsive & optimized for performance
-> - 🎬 Interactive 3D graphics with Three.js
-> - ⚡ Production-ready code built with best practices
+> A real macOS Terminal panel you can type into, a refined glass cursor with Apple-palette lightning that snaps to buttons, a WebGL ripple shader on the Aegis monitor, and pixel-disintegration on every heading. Worth a hover.
 >
-> Built with **HTML5, CSS3, and JavaScript** — designed with Claude AI for optimal UX and performance.
->
-> Feel free to fork and customize it for your own portfolio! 💻
-
----
-
-Made with ❤️ and AI assistance
+> Code: https://github.com/rudhrancodes-dev/rudhran-portfolio
